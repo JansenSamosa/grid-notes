@@ -1,0 +1,17 @@
+.module-holder {
+    width: 100%;
+    height: 100%;
+
+    background-color: #f5f8fa;
+}
+
+.text-module {
+    background: none;
+    border: none;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    outline: none;
+    resize: none;
+}
