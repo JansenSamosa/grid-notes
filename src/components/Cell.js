@@ -4,25 +4,19 @@ import ModuleHolder from "./cell_modules/ModuleHolder"
 import '../App.css'
 
 const Cell = (props) => {
-    const { columnSize, rowSize, xPos, yPos, setRowSize, setColumnSize, indexC, indexR } = props
+    const { columnSize, rowSize, xPos, yPos, setRowSize, setColumnSize, indexC, indexR, isLastRow, isLastColumn } = props
 
-    const getCellStyle = {
-        width: columnSize,
-        height: rowSize,
-        left: xPos,
-        top: yPos
-    }
 
     const beginResize = (mouseStartEvent) => {
-        const draggerClass = mouseStartEvent.target.className
-        console.log(mouseStartEvent)
+        const draggerClassName = mouseStartEvent.target.className
+
         const intialPos = { x: mouseStartEvent.pageX, y: mouseStartEvent.pageY }
 
         const resize = (mouseMoveEvent) => {
-            if (draggerClass == 'draggerSE' || draggerClass == 'draggerE') {
+            if (draggerClassName == 'draggerSE' || draggerClassName == 'draggerE') {
                 setColumnSize(indexC, mouseMoveEvent.pageX - intialPos.x)
             }
-            if (draggerClass == 'draggerSE' || draggerClass == 'draggerS') {
+            if (draggerClassName == 'draggerSE' || draggerClassName == 'draggerS') {
                 setRowSize(indexR, mouseMoveEvent.pageY - intialPos.y)
             }
         }
@@ -35,22 +29,31 @@ const Cell = (props) => {
         window.addEventListener("mouseup", endResize, { once: true })
     }
 
+    const cellStyle = {
+        width: `${columnSize}%`,
+        height: `${rowSize}%`,
+        left: `${xPos}%`,
+        top: `${yPos}%`
+    }
 
     return (
-        <div className='cell' style={getCellStyle}>
+        <div className='cell' style={cellStyle}>
             <div
                 className='draggerSE'
                 onMouseDown={beginResize}
+                style={{ display: isLastColumn || isLastRow ? 'none' : 'block' }}
             />
             <div
                 className='draggerE'
                 onMouseDown={beginResize}
+                style={{ display: isLastColumn ? 'none' : 'block' }}
             />
             <div
                 className='draggerS'
                 onMouseDown={beginResize}
+                style={{ display: isLastRow ? 'none' : 'block' }}
             />
-            <ModuleHolder/>
+            <ModuleHolder />
         </div>
     )
 }
