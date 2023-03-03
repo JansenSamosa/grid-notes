@@ -1,5 +1,5 @@
 import Text_module from './Text_module'
-
+import Grid from '../Grid'
 import './Modules.css'
 
 const ModuleHolder = () => {

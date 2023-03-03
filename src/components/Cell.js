@@ -4,7 +4,7 @@ import ModuleHolder from "./cell_modules/ModuleHolder"
 import '../App.css'
 
 const Cell = (props) => {
-    const { columnSize, rowSize, xPos, yPos, setRowSize, setColumnSize, indexC, indexR, isLastRow, isLastColumn } = props
+    const { columnSize, rowSize, xPos, yPos, setRowSize, setColumnSize, indexC, indexR, isLastRow, isLastColumn, setFocus } = props
 
 
     const beginResize = (mouseStartEvent) => {
@@ -24,7 +24,7 @@ const Cell = (props) => {
         const endResize = (mouseEndEvent) => {
             window.removeEventListener("mousemove", resize)
         }
-
+        
         window.addEventListener("mousemove", resize)
         window.addEventListener("mouseup", endResize, { once: true })
     }
@@ -37,7 +37,7 @@ const Cell = (props) => {
     }
 
     return (
-        <div className='cell' style={cellStyle}>
+        <div className='cell' style={cellStyle} onFocus={() => setFocus(indexR,indexC)}>
             <div
                 className='draggerSE'
                 onMouseDown={beginResize}

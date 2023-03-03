@@ -5,7 +5,12 @@ import './App.css';
 const App = () => {
     return (
         <div className="App">
-            <Grid />
+            <Grid
+                gridSize={{
+                    widthVw: 900,
+                    aspectRatio: 11 / 8.5
+                }}
+            />
         </div>
     );
 }
