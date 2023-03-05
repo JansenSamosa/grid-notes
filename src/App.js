@@ -6,10 +6,7 @@ const App = () => {
     return (
         <div className="App">
             <Grid
-                gridSize={{
-                    widthVw: 900,
-                    aspectRatio: 11 / 8.5
-                }}
+                grid_id={'3'}
             />
         </div>
     );

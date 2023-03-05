@@ -1,11 +1,19 @@
+import { useState } from 'react'
+
 import Text_module from './Text_module'
-import Grid from '../Grid'
+
+import { fetchModuleData } from '../../backend-utils/fetchData'
+
 import './Modules.css'
 
-const ModuleHolder = () => {
+const ModuleHolder = (props) => {
+    const module_data = fetchModuleData(props.module_id)
+    
+    const [data, setData] = useState(module_data.data)
+
     return (
         <div className='module-holder'>
-            <Text_module />
+            <Text_module text={data.text} setData={setData}/>
         </div>
     )
 }

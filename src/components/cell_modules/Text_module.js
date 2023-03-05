@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
-const Text_module = () => {
+const Text_module = (props) => {
+    const { text, setData } = props
+    
+    const setText = e => {
+        setData({ text: e.target.value })
+    }
 
-  const constGetFontSize = (targetPixelSize) => {
-  }
+    let rerenders = useRef(0)
+    rerenders.current++
 
-  return (
-    <textarea className='text-module'></textarea>
-  )
+    return (
+        <>
+            <textarea className='text-module' value={`${text}`} onChange={setText}></textarea>
+        </>
+    )
 }
 
 export default Text_module

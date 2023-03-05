@@ -1,0 +1,18 @@
+{
+    "modules": [
+        {
+            "module_id": "generic",
+            "module_type": "text",
+            "data": {
+                "text": ""
+            }
+        },
+        {
+            "module_id": "1",
+            "module_type": "text",
+            "data": {
+                "text": "id: 1"
+            }
+        }
+    ]
+}

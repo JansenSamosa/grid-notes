@@ -1,16 +1,21 @@
-import { useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import ModuleHolder from "./cell_modules/ModuleHolder"
 
 import '../App.css'
 
-const Cell = (props) => {
-    const { columnSize, rowSize, xPos, yPos, setRowSize, setColumnSize, indexC, indexR, isLastRow, isLastColumn, setFocus } = props
+const Cell = memo((props) => {
 
+    const { columnSize, rowSize } = props
+    const { xPos, yPos } = props
+    const { setRowSize, setColumnSize } = props
+    const { indexC, indexR } = props
+    const { isLastRow, isLastColumn } = props
+    const { setFocus } = props
 
     const beginResize = (mouseStartEvent) => {
         const draggerClassName = mouseStartEvent.target.className
 
-        const intialPos = { x: mouseStartEvent.pageX, y: mouseStartEvent.pageY }
+        let intialPos = { x: mouseStartEvent.pageX, y: mouseStartEvent.pageY }
 
         const resize = (mouseMoveEvent) => {
             if (draggerClassName == 'draggerSE' || draggerClassName == 'draggerE') {
@@ -24,7 +29,7 @@ const Cell = (props) => {
         const endResize = (mouseEndEvent) => {
             window.removeEventListener("mousemove", resize)
         }
-        
+
         window.addEventListener("mousemove", resize)
         window.addEventListener("mouseup", endResize, { once: true })
     }
@@ -37,7 +42,7 @@ const Cell = (props) => {
     }
 
     return (
-        <div className='cell' style={cellStyle} onFocus={() => setFocus(indexR,indexC)}>
+        <div className='cell' style={cellStyle} onFocus={() => setFocus(indexR, indexC)}>
             <div
                 className='draggerSE'
                 onMouseDown={beginResize}
@@ -53,9 +58,9 @@ const Cell = (props) => {
                 onMouseDown={beginResize}
                 style={{ display: isLastRow ? 'none' : 'block' }}
             />
-            <ModuleHolder />
+            <ModuleHolder module_id={props.module_id} />
         </div>
     )
-}
+})
 
 export default Cell

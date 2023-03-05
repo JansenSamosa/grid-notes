@@ -1,81 +1,62 @@
-import { useState } from 'react';
-import { convertVhToPx, convertVwToPx } from '../misc/utils';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { fetchGridData } from '../backend-utils/fetchData';
 
+import { areEqual } from '../misc/utils';
+import { round2, round5 } from '../misc/utils';
 import Cell from './Cell';
 
 import '../App.css'
+import useGrid from './useGrid';
 
-const Grid = (props) => {
-    const { widthVw, aspectRatio } = props.gridSize
-    const heightVw = widthVw * aspectRatio
+const Grid = ({ grid_id }) => {
+    const widthPx = 900
+    const aspectRatio = 11 / 8.5
+    const heightPx = widthPx * aspectRatio
 
-    //size of array referes to amount of rows/columns
-    //value of each index refers to percentage size of row/column
-    const [rows, setRows] = useState([100 / 8, 100 / 8, 100 / 8, 100 / 8, 100 / 8, 100 / 8, 100 / 8, 100 / 8])
-    const [columns, setColumns] = useState([25, 75])
-
-    const [focusedCell, setFocusedCell] = useState({ row: 0, column: 0 })
-
-    const setRowSize = (indexR, additionalSize) => {
-        //const additionalSizePercent = additionalSize / convertVwToPx(heightVw) * 100;
-
-        const additionalSizePercent = additionalSize / heightVw * 100;
-
-        setRows(rows.map((r, i) => {
-            if (i == indexR) return r + additionalSizePercent
-            if (i == indexR + 1) return r - additionalSizePercent
-            return r
-        }))
-    }
-
-    const setColumnSize = (indexC, additionalSize) => {
-        //const additionalSizePercent = additionalSize / convertVwToPx(widthVw) * 100;
-
-        const additionalSizePercent = additionalSize / widthVw * 100;
-
-        setColumns(columns.map((c, i) => {
-            if (i == indexC) return c + additionalSizePercent
-            if (i == indexC + 1) return c - additionalSizePercent
-            return c
-        }))
-    }
-
-    const setFocus = (r, c) => {
-        setFocusedCell({ row: r, column: c })
-    }
+    const [rowsSize, setRowSize,
+        columnsSize, setColumnSize,
+        moduleData,
+        focusedCell, setFocus,
+        splitRow, splitColumn
+    ] = useGrid(grid_id, widthPx, heightPx)
 
     //sums up all elements in rows or columns array up to a certain index.
-    const getCellXPos = (indexC) => columns.slice(0, indexC).reduce((a, b) => a + b, 0);
-    const getCellYPos = (indexR) => rows.slice(0, indexR).reduce((a, b) => a + b, 0);
+    const getCellXPos = useCallback(indexC => columnsSize.slice(0, indexC).reduce((a, b) => a + b, 0));
+    const getCellYPos = useCallback(indexR => rowsSize.slice(0, indexR).reduce((a, b) => a + b, 0));
 
     return (
-        <div className='grid' style={{ width: `${widthVw}px`, height: `${heightVw}px` }}>
-            {rows.map((sizeR, indexR) =>
-                <div key={`${indexR}`}>
-                    {columns.map((sizeC, indexC) => {
-                        return <Cell
-                            rowSize={sizeR}
-                            indexR={indexR}
-                            isLastRow={indexR == rows.length - 1 ? true : false}
-                            setRowSize={setRowSize}
+        <>
+            <button onClick={splitRow} style={{position:'fixed'}}>Split Row</button>
+            <button onClick={splitColumn} style={{position:'fixed', top:90}}>Split Column</button>
+            <div className='grid' style={{ width: `${widthPx}px`, height: `${heightPx}px` }}>
+                {rowsSize.map((sizeR, indexR) =>
+                    <div key={`${indexR}`}>
+                        {columnsSize.map((sizeC, indexC) => {
+                            return <Cell
+                                rowSize={sizeR}
+                                indexR={indexR}
+                                isLastRow={indexR == rowsSize.length - 1 ? true : false}
+                                setRowSize={setRowSize}
 
-                            columnSize={sizeC}
-                            indexC={indexC}
-                            isLastColumn={indexC == columns.length - 1 ? true : false}
-                            setColumnSize={setColumnSize}
+                                columnSize={sizeC}
+                                indexC={indexC}
+                                isLastColumn={indexC == columnsSize.length - 1 ? true : false}
+                                setColumnSize={setColumnSize}
 
-                            setFocus={setFocus}
+                                setFocus={setFocus}
 
-                            xPos={getCellXPos(indexC)}
-                            yPos={getCellYPos(indexR)}
+                                xPos={getCellXPos(indexC)}
+                                yPos={getCellYPos(indexR)}
 
-                            key={`${indexR}, ${indexC}`}
+                                module_id={moduleData[indexR][indexC]}
 
-                        />
-                    })}
-                </div>
-            )}
-        </div>
+                                key={`${indexR}, ${indexC}`}
+                            />
+                        })}
+                    </div>
+                )}
+            </div>
+        </>
     )
 }
 
