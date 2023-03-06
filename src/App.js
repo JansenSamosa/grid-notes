@@ -6,7 +6,7 @@ const App = () => {
     return (
         <div className="App">
             <Grid
-                grid_id={'3'}
+                grid_id={'3'}                         
             />
         </div>
     );

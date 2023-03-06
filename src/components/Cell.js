@@ -3,11 +3,11 @@ import ModuleHolder from "./cell_modules/ModuleHolder"
 
 import '../App.css'
 
-const Cell = memo((props) => {
+const Cell = (props) => {
 
     const { columnSize, rowSize } = props
     const { xPos, yPos } = props
-    const { setRowSize, setColumnSize } = props
+    const { increaseRowSize, increaseColumnSize } = props
     const { indexC, indexR } = props
     const { isLastRow, isLastColumn } = props
     const { setFocus } = props
@@ -19,10 +19,10 @@ const Cell = memo((props) => {
 
         const resize = (mouseMoveEvent) => {
             if (draggerClassName == 'draggerSE' || draggerClassName == 'draggerE') {
-                setColumnSize(indexC, mouseMoveEvent.pageX - intialPos.x)
+                increaseColumnSize(indexC, mouseMoveEvent.pageX - intialPos.x)
             }
             if (draggerClassName == 'draggerSE' || draggerClassName == 'draggerS') {
-                setRowSize(indexR, mouseMoveEvent.pageY - intialPos.y)
+                increaseRowSize(indexR, mouseMoveEvent.pageY - intialPos.y)
             }
         }
 
@@ -61,6 +61,6 @@ const Cell = memo((props) => {
             <ModuleHolder module_id={props.module_id} />
         </div>
     )
-})
+}
 
 export default Cell

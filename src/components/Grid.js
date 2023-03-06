@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { fetchGridData } from '../backend-utils/fetchData';
 
-import { areEqual } from '../misc/utils';
-import { round2, round5 } from '../misc/utils';
 import Cell from './Cell';
 
 import '../App.css'
@@ -13,11 +11,11 @@ const Grid = ({ grid_id }) => {
     const aspectRatio = 11 / 8.5
     const heightPx = widthPx * aspectRatio
 
-    const [rowsSize, setRowSize,
-        columnsSize, setColumnSize,
+    const [rowsSize, increaseRowSize,
+        columnsSize, increaseColumnSize,
         moduleData,
         focusedCell, setFocus,
-        splitRow, splitColumn
+        splitRow, splitColumn,
     ] = useGrid(grid_id, widthPx, heightPx)
 
     //sums up all elements in rows or columns array up to a certain index.
@@ -36,12 +34,12 @@ const Grid = ({ grid_id }) => {
                                 rowSize={sizeR}
                                 indexR={indexR}
                                 isLastRow={indexR == rowsSize.length - 1 ? true : false}
-                                setRowSize={setRowSize}
+                                increaseRowSize={increaseRowSize}
 
                                 columnSize={sizeC}
                                 indexC={indexC}
                                 isLastColumn={indexC == columnsSize.length - 1 ? true : false}
-                                setColumnSize={setColumnSize}
+                                increaseColumnSize={increaseColumnSize}
 
                                 setFocus={setFocus}
 

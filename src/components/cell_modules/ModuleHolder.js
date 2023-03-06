@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Text_module from './Text_module'
 
@@ -7,9 +7,11 @@ import { fetchModuleData } from '../../backend-utils/fetchData'
 import './Modules.css'
 
 const ModuleHolder = (props) => {
-    const module_data = fetchModuleData(props.module_id)
-    
-    const [data, setData] = useState(module_data.data)
+    const [data, setData] = useState(fetchModuleData(props.module_id).data)
+
+    useEffect(() => {
+        setData(fetchModuleData(props.module_id).data)
+    }, [props.module_id])
 
     return (
         <div className='module-holder'>

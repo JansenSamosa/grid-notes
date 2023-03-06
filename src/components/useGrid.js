@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { fetchGridData } from '../backend-utils/fetchData';
+import { round2, round5, roundXToY } from '../misc/utils';
 
 const useGrid = (grid_id, widthPx, heightPx) => {
     const grid_data = fetchGridData(grid_id)
@@ -12,33 +13,33 @@ const useGrid = (grid_id, widthPx, heightPx) => {
     const [rowsSize, setRowsSize] = useState(grid_data.dimensions.rows)
     const [columnsSize, setColumnsSize] = useState(grid_data.dimensions.columns)
 
+    const resizeStep = 5
+
     //Uses Ref since this function is called by an event handler
     const rowsSizeRef = useRef(rowsSize)
     rowsSizeRef.current = rowsSize;
-    const setRowSize = (indexR, additionalSize) => {
-        const additionalSizePercent = Math.round(additionalSize / heightPx * 100);
+    const increaseRowSize = (indexR, additionalSize) => {
+        const additionalSizePercent = roundXToY(additionalSize / heightPx * 100, resizeStep);
 
-        const newRowsSize = rowsSize.map((r, i) => {
-            if (i == indexR) return r + additionalSizePercent
-            if (i == indexR + 1) return r - additionalSizePercent
-            return r
-        })
+        const newRowsSize = rowsSize.slice(0)
+        newRowsSize[indexR] = roundXToY(newRowsSize[indexR] + additionalSizePercent, resizeStep)
+        newRowsSize[indexR+1] -= (newRowsSize[indexR] - rowsSize[indexR])
 
+        if (newRowsSize.some(r => r <= 0)) return "No space available"
         if ((newRowsSize[indexR] - rowsSizeRef.current[indexR]) != 0) setRowsSize(newRowsSize)
     }
 
     //Uses Ref since this function is called by an event handler
     const columnsSizeRef = useRef(columnsSize)
     columnsSizeRef.current = columnsSize;
-    const setColumnSize = (indexC, additionalSize) => {
-        const additionalSizePercent = Math.round(additionalSize / widthPx * 100);
+    const increaseColumnSize = (indexC, additionalSize) => {
+        const additionalSizePercent = roundXToY(additionalSize / widthPx * 100, resizeStep);
 
-        const newColumnsSize = columnsSize.map((c, i) => {
-            if (i == indexC) return c + additionalSizePercent
-            if (i == indexC + 1) return c - additionalSizePercent
-            return c
-        })
+        const newColumnsSize = columnsSize.slice(0)
+        newColumnsSize[indexC] = roundXToY(newColumnsSize[indexC] + additionalSizePercent, resizeStep)
+        newColumnsSize[indexC+1] -= (newColumnsSize[indexC] - columnsSize[indexC])
 
+        if (newColumnsSize.some(c => c <= 0)) return "No space available"
         if ((newColumnsSize[indexC] - columnsSizeRef.current[indexC]) != 0) setColumnsSize(newColumnsSize)
     }
 
@@ -46,38 +47,46 @@ const useGrid = (grid_id, widthPx, heightPx) => {
         setFocusedCell({ row: r, column: c })
     }
 
+    //Splits row in half to create a new row
     const splitRow = () => {
         const indexR = focusedCell.row
-        const sizeOfNewRow = rowsSize[indexR] / 2;
+        const sizeOfNewRow = roundXToY(rowsSize[indexR]/2, resizeStep);
 
         const newRowsSize = rowsSize.slice(0)
         newRowsSize.splice(indexR, 0, sizeOfNewRow)
-        newRowsSize[indexR + 1] = sizeOfNewRow
+        newRowsSize[indexR + 1] -= newRowsSize[indexR]
 
         const newModuleData = moduleData.slice(0)
         newModuleData.splice(indexR, 0, columnsSize.map(cSize => "generic"))
 
+        if (newRowsSize.some(r => r <= 0)) return "No space available"
         setRowsSize(newRowsSize)
         setModuleData(newModuleData)
     }
 
+    //Splits column in half to create new column
     const splitColumn = () => {
         const indexC = focusedCell.column
-        const sizeOfNewColumn = columnsSize[indexC] / 2;
+        const sizeOfNewColumn = roundXToY(columnsSize[indexC]/2, resizeStep);
 
         const newColumnsSize = columnsSize.slice(0)
         newColumnsSize.splice(indexC, 0, sizeOfNewColumn)
-        newColumnsSize[indexC + 1] = sizeOfNewColumn
+        newColumnsSize[indexC + 1] -= newColumnsSize[indexC]
 
-        let newModuleData = moduleData.slice(0)
+        const newModuleData = moduleData.slice(0)
 
         newModuleData.forEach(row => row.splice(indexC, 0, "generic"))
-
+        
+        if (newColumnsSize.some(c => c <= 0)) return "No space available"
         setColumnsSize(newColumnsSize)
         setModuleData(newModuleData)
     }
-
-    return [rowsSize, setRowSize, columnsSize, setColumnSize, moduleData, focusedCell, setFocus, splitRow, splitColumn]
+    return [rowsSize, increaseRowSize,
+        columnsSize, increaseColumnSize,
+        moduleData,
+        focusedCell, setFocus,
+        splitRow, splitColumn,
+    ]
 }
 
 export default useGrid
