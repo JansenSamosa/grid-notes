@@ -7,7 +7,7 @@ const Cell = (props) => {
 
     const { columnSize, rowSize } = props
     const { xPos, yPos } = props
-    const { increaseRowSize, increaseColumnSize } = props
+    const { resizeRow, resizeColumn, finishResize } = props
     const { indexC, indexR } = props
     const { isLastRow, isLastColumn } = props
     const { setFocus } = props
@@ -19,15 +19,16 @@ const Cell = (props) => {
 
         const resize = (mouseMoveEvent) => {
             if (draggerClassName == 'draggerSE' || draggerClassName == 'draggerE') {
-                increaseColumnSize(indexC, mouseMoveEvent.pageX - intialPos.x)
+                resizeColumn(indexC, mouseMoveEvent.pageX - intialPos.x)
             }
             if (draggerClassName == 'draggerSE' || draggerClassName == 'draggerS') {
-                increaseRowSize(indexR, mouseMoveEvent.pageY - intialPos.y)
+                resizeRow(indexR, mouseMoveEvent.pageY - intialPos.y)
             }
         }
 
         const endResize = (mouseEndEvent) => {
             window.removeEventListener("mousemove", resize)
+            finishResize()
         }
 
         window.addEventListener("mousemove", resize)

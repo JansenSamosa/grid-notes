@@ -7,5 +7,5 @@ export const fetchGridData = grid_id => {
 
 export const fetchModuleData = module_id => {
 
-    return module_data.modules.find(module => module.module_id == module_id)
+    return module_data.modules[module_id]
 }

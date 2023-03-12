@@ -11,10 +11,11 @@ const Text_module = (props) => {
     rerenders.current++
 
     return (
-        <>
+        <>  
             <textarea className='text-module' value={`${text}`} onChange={setText}></textarea>
         </>
     )
 }
+//<p style={{position:'absolute', left:2, bottom:-10, color:'gray', userSelect:'none'}}>{rerenders.current}</p>
 
 export default Text_module

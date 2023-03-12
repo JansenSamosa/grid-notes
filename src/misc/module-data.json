@@ -1,18 +1,28 @@
 {
     "modules": [
         {
-            "module_id": "generic",
-            "module_type": "text",
             "data": {
-                "text": ""
-            }
+                "text": "this is module of id 0"
+            },
+            "module_type": "text"
         },
         {
-            "module_id": "1",
-            "module_type": "text",
             "data": {
-                "text": "id: 1"
-            }
+                "text": "this is module of id 1"
+            },
+            "module_type": "text"
+        },
+        {
+            "data": {
+                "text": "this is module of id 2"
+            },
+            "module_type": "text"
+        },
+        {
+            "data": {
+                "text": "this is module of id 3"
+            },
+            "module_type": "text"
         }
     ]
 }

@@ -20,7 +20,7 @@
                         ["generic","generic","generic","generic","generic","generic","generic","generic","generic","generic"]]
         },
         {
-            "grid_id": "2",
+            "grid_id": "0",
 
             "dimensions": {
                 "rows": [50,50],
@@ -28,8 +28,8 @@
             },
 
             "modules": [
-                ["generic", "generic"],
-                ["generic", "generic"]
+                [0, 1],
+                [2, 3]
             ]
         },
         {
@@ -41,8 +41,7 @@
             },
 
             "modules": [
-                ["generic"],
-                ["generic"]
+                [0]
             ]
         }
     ]

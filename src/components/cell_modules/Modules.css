@@ -3,6 +3,11 @@
     height: 100%;
 }
 
+.module-holder .grid {
+    left:-4px;
+    top:-4px;
+}
+
 .text-module {
     font-size: 16px;
     background: none;

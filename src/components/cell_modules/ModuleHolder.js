@@ -1,21 +1,31 @@
-import { useEffect, useState } from 'react'
-
+import { memo, useEffect, useRef, useState } from 'react'
+ 
 import Text_module from './Text_module'
-
+import Grid from '../Grid'
 import { fetchModuleData } from '../../backend-utils/fetchData'
 
 import './Modules.css'
+import { useModuleData } from '../../backend-utils/useModuleData'
 
-const ModuleHolder = (props) => {
-    const [data, setData] = useState(fetchModuleData(props.module_id).data)
+const ModuleHolder = ({ module_id }) => {
+    const [data, setData, type] = useModuleData(module_id)
+                             
+    const holder = useRef()
 
-    useEffect(() => {
-        setData(fetchModuleData(props.module_id).data)
-    }, [props.module_id])
+    const getModuleByType = () => {
+        if (type == "text") return <Text_module text={data.text} setData={setData} />
+        else if (type == "sub_grid") return <Grid
+            dbPath={`modules/${module_id}/`}
+            grid_id={'data'}
+            widthPx={holder.current.offsetWidth}
+            heightPx={holder.current.offsetHeight}
+        />
+        else return <p>Loading...</p>
+    }
 
     return (
-        <div className='module-holder'>
-            <Text_module text={data.text} setData={setData}/>
+        <div className='module-holder' ref={holder}>
+            {getModuleByType()}
         </div>
     )
 }
